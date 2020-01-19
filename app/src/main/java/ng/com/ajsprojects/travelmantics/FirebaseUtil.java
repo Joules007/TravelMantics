@@ -29,7 +29,7 @@ public class FirebaseUtil {
     public static StorageReference mStorageRef;
     public static boolean isAdmin;
     private static FirebaseUtil firebaseUtil;
-    private static FirebaseAuth mAuth;
+    private static FirebaseAuth mFirebaseAuth;
     private static  FirebaseAuth.AuthStateListener mAuthListener;
     private static ListActivity caller;
     private FirebaseUtil(){}
@@ -38,13 +38,13 @@ public class FirebaseUtil {
         if (firebaseUtil == null) {
             firebaseUtil = new FirebaseUtil();
             mFirebaseDatabase = FirebaseDatabase.getInstance();
-            mAuth = FirebaseAuth.getInstance();
+            mFirebaseAuth = FirebaseAuth.getInstance();
             caller = callerActivity;
 
             mAuthListener = new FirebaseAuth.AuthStateListener() {
                 @Override
                 public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    if (mAuth.getCurrentUser() == null){
+                    if (mFirebaseAuth.getCurrentUser() == null){
                         FirebaseUtil.signIn();
                     }
                     else{
@@ -82,29 +82,29 @@ public class FirebaseUtil {
                 .child(uid);
         ChildEventListener listener = new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 FirebaseUtil.isAdmin=true;
-                Log.d("Admin", "You an Administrator");
+                Log.d("Admin", "You are an Administrator");
                 caller.showMenu();
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot,@Nullable String s) {
+            public void onChildChanged(DataSnapshot dataSnapshot,@Nullable String s) {
 
             }
 
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
             }
 
             @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot,@Nullable String s) {
+            public void onChildMoved(DataSnapshot dataSnapshot,@Nullable String s) {
 
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         };
@@ -113,12 +113,12 @@ public class FirebaseUtil {
 
 
     public static void attachListener(){
-        mAuth.addAuthStateListener(mAuthListener);
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
 
     }
 
     public static void detachListener(){
-        mAuth.removeAuthStateListener(mAuthListener);
+        mFirebaseAuth.removeAuthStateListener(mAuthListener);
 
     }
 
@@ -126,5 +126,4 @@ public class FirebaseUtil {
         mStorage = FirebaseStorage.getInstance();
         mStorageRef = mStorage.getReference().child("deals_pictures");
     }
-
 }
